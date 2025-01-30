@@ -10,6 +10,7 @@ A Swift framework for easy Bluetooth Low Energy (BLE) device scanning and discov
 - Automatic cleanup and resource management
 - Comprehensive logging
 - Thread-safe implementation
+- Real-time device discovery using Combine
 
 ## Requirements
 
@@ -24,7 +25,7 @@ A Swift framework for easy Bluetooth Low Energy (BLE) device scanning and discov
 1. In Xcode, select File > Add Packages...
 2. Enter the package repository URL:
    ```
-   https://github.com/YourUsername/BLEExtractor.git
+   https://github.com/saket1192/BLEExtractor.git
    ```
 3. Select the version or branch you want to use
 
@@ -48,27 +49,42 @@ import BLEExtractor
 let scanner = BLEScanner()
 ```
 
-3. Start scanning for devices:
+3. For real-time device discovery:
 ```swift
-do {
-    // Scan for 5 seconds
-    let devices = try await scanner.startScan(duration: 5)
-    
-    // Process discovered devices
-    for device in devices {
+// Set up Combine subscribers
+private var cancellables = Set<AnyCancellable>()
+
+// Subscribe to device discoveries
+scanner.deviceDiscoveryPublisher
+    .sink { device in
         print("Found device: \(device.name ?? "Unnamed")")
         print("RSSI: \(device.rssi)")
     }
-} catch let error as BLEError {
-    // Handle specific BLE errors
-    print("BLE Error: \(error.localizedDescription)")
-} catch {
-    // Handle other errors
-    print("Error: \(error.localizedDescription)")
+    .store(in: &cancellables)
+
+// Start scanning
+Task {
+    do {
+        try await scanner.startScanningWithPublisher()
+    } catch {
+        print("Scanning error: \(error)")
+    }
 }
 ```
 
-4. Stop scanning when needed:
+4. For batch scanning:
+```swift
+do {
+    let devices = try await scanner.startScan(duration: 5)
+    for device in devices {
+        print("Found device: \(device.name ?? "Unnamed")")
+    }
+} catch {
+    print("Error: \(error)")
+}
+```
+
+5. Stop scanning when needed:
 ```swift
 scanner.stopScan()
 ```
@@ -83,6 +99,45 @@ Add the following keys to your app's Info.plist:
 <key>NSBluetoothPeripheralUsageDescription</key>
 <string>This app needs Bluetooth access to scan for nearby devices</string>
 ```
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+### Development Workflow
+
+1. Clone the repository
+2. Run tests: `xcodebuild test -scheme BLEExtractor`
+3. Lint the pod: `pod lib lint`
+
+### Releasing New Versions
+
+1. Update version in BLEExtractor.podspec
+2. Commit changes
+3. Create and push a new tag:
+   ```bash
+   git tag 'X.Y.Z'
+   git push origin 'X.Y.Z'
+   ```
+4. Create a new release on GitHub
+5. CI/CD will automatically:
+   - Run tests
+   - Validate podspec
+   - Deploy to CocoaPods
+
+## CI/CD Pipeline
+
+This project uses GitHub Actions for continuous integration and deployment:
+
+- On every push and pull request:
+  - Runs unit tests
+  - Validates podspec
+- On new releases:
+  - Automatically publishes to CocoaPods
 
 ## License
 

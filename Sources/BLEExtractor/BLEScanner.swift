@@ -1,6 +1,7 @@
 import Foundation
 import CoreBluetooth
 import os.log
+import Combine
 
 /// A class responsible for scanning Bluetooth Low Energy devices
 public final class BLEScanner: NSObject {
@@ -11,11 +12,37 @@ public final class BLEScanner: NSObject {
     private var scanningTask: Task<[BLEDevice], Error>?
     private var discoveredDevices: [UUID: BLEDevice] = [:]
     
+    /// Publisher for real-time device discovery
+    public let deviceDiscoveryPublisher = PassthroughSubject<BLEDevice, Never>()
+    
+    /// Publisher for Bluetooth state changes
+    public let bluetoothStatePublisher = PassthroughSubject<CBManagerState, Never>()
+    
     // MARK: - Public Interface
     
     public override init() {
         super.init()
         centralManager = CBCentralManager(delegate: nil, queue: .main)
+    }
+    
+    /// Starts scanning for BLE devices with real-time updates
+    /// - Parameter duration: Optional duration in seconds. If nil, scanning continues until stopScan is called
+    /// - Throws: BLEError if scanning cannot be started
+    public func startScanningWithPublisher(duration: TimeInterval? = nil) async throws {
+        // Cancel any existing scanning task
+        scanningTask?.cancel()
+        stopScanning()
+        
+        // Start scanning
+        try await startScanning()
+        
+        // If duration is provided, stop after that time
+        if let duration = duration {
+            Task {
+                try await Task.sleep(nanoseconds: UInt64(duration * 1_000_000_000))
+                stopScan()
+            }
+        }
     }
     
     /// Starts scanning for BLE devices
@@ -103,7 +130,7 @@ public final class BLEScanner: NSObject {
         
         // Set delegate and start scanning
         centralManager.delegate = self
-        centralManager.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey: false])
+        centralManager.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey: true])
     }
     
     private func stopScanning() {
@@ -117,11 +144,15 @@ public final class BLEScanner: NSObject {
 extension BLEScanner: CBCentralManagerDelegate {
     public func centralManagerDidUpdateState(_ central: CBCentralManager) {
         logger.info("Bluetooth state updated: \(central.state.rawValue)")
+        bluetoothStatePublisher.send(central.state)
     }
     
     public func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
         let device = BLEDevice(peripheral: peripheral, rssi: RSSI.intValue, advertisementData: advertisementData)
         discoveredDevices[device.id] = device
         logger.debug("Discovered device: \(device.name ?? "Unnamed") (RSSI: \(device.rssi))")
+        
+        // Send the discovered device through the publisher
+        deviceDiscoveryPublisher.send(device)
     }
 } 

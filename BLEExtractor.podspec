@@ -15,7 +15,7 @@ Pod::Spec.new do |spec|
                      * Thread-safe implementation
                      DESC
                      
-  spec.homepage     = "https://github.com/saket1192/BLEExtractor"
+  spec.homepage     = "https://github.com/saket1192/BLEExtrator"
   spec.license      = { :type => "MIT", :file => "LICENSE" }
   spec.author       = { "saket kumar" => "saket1192@gmail.com" }
   
@@ -23,7 +23,7 @@ Pod::Spec.new do |spec|
   spec.osx.deployment_target = "11.0"
   spec.swift_version = "5.5"
   
-  spec.source       = { :git => "https://github.com/saket1192/BLEExtractor.git", :tag => "#{spec.version}" }
+  spec.source       = { :git => "https://github.com/saket1192/BLEExtrator.git", :tag => "#{spec.version}" }
   spec.source_files = "Sources/BLEExtractor/**/*.swift"
   
   spec.framework    = "CoreBluetooth"
