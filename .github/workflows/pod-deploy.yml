@@ -32,10 +32,7 @@ jobs:
       
     - name: Build and Test
       run: |
-        xcodebuild test \
-          -scheme BLEExtractor \
-          -destination 'platform=iOS Simulator,name=iPhone 14,OS=latest' \
-          | xcpretty && exit ${PIPESTATUS[0]}
+        swift test --enable-test-discovery
           
   deploy:
     needs: [lint, test]

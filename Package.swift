@@ -18,9 +18,12 @@ let package = Package(
     targets: [
         .target(
             name: "BLEExtractor",
-            dependencies: []),
+            dependencies: [],
+            path: "Sources/BLEExtractor"),
         .testTarget(
             name: "BLEExtractorTests",
-            dependencies: ["BLEExtractor"]),
-    ]
+            dependencies: ["BLEExtractor"],
+            path: "Tests/BLEExtractorTests"),
+    ],
+    swiftLanguageVersions: [.v5]
 ) 

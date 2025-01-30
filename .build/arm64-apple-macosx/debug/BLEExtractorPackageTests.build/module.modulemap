@@ -1,0 +1,4 @@
+module BLEExtractorPackageTests {
+    header "/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractorPackageTests.build/BLEExtractorPackageTests-Swift.h"
+    requires objc
+}

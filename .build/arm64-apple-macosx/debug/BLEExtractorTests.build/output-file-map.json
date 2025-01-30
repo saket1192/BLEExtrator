@@ -1,0 +1,11 @@
+{
+  "": {
+    "swift-dependencies": "/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractorTests.build/master.swiftdeps"
+  },
+  "/Users/i77194/Documents/BLEExtractor/Tests/BLEExtractorTests/BLEScannerTests.swift": {
+    "dependencies": "/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractorTests.build/BLEScannerTests.d",
+    "object": "/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractorTests.build/BLEScannerTests.swift.o",
+    "swiftmodule": "/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractorTests.build/BLEScannerTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractorTests.build/BLEScannerTests.swiftdeps"
+  }
+}

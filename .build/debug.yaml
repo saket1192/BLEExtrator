@@ -1,0 +1,112 @@
+client:
+  name: basic
+  file-system: device-agnostic
+tools: {}
+targets:
+  "BLEExtractor-arm64-apple-macosx15.0-debug.module": ["<BLEExtractor-arm64-apple-macosx15.0-debug.module>"]
+  "BLEExtractorPackageTests-arm64-apple-macosx15.0-debug.module": ["<BLEExtractorPackageTests-arm64-apple-macosx15.0-debug.module>"]
+  "BLEExtractorPackageTests-arm64-apple-macosx15.0-debug.test": ["<BLEExtractorPackageTests-arm64-apple-macosx15.0-debug.test>"]
+  "BLEExtractorTests-arm64-apple-macosx15.0-debug.module": ["<BLEExtractorTests-arm64-apple-macosx15.0-debug.module>"]
+  "PackageStructure": ["<PackageStructure>"]
+  "main": ["<BLEExtractor-arm64-apple-macosx15.0-debug.module>"]
+  "test": ["<BLEExtractor-arm64-apple-macosx15.0-debug.module>","<BLEExtractorPackageTests-arm64-apple-macosx15.0-debug.test>","<BLEExtractorTests-arm64-apple-macosx15.0-debug.module>"]
+default: "main"
+nodes:
+  "/Users/i77194/Documents/BLEExtractor/Sources/BLEExtractor/":
+    is-directory-structure: true
+    content-exclusion-patterns: [".git",".build"]
+  "/Users/i77194/Documents/BLEExtractor/Tests/BLEExtractorTests/":
+    is-directory-structure: true
+    content-exclusion-patterns: [".git",".build"]
+commands:
+  "/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractor.build/sources":
+    tool: write-auxiliary-file
+    inputs: ["<sources-file-list>","/Users/i77194/Documents/BLEExtractor/Sources/BLEExtractor/BLEDevice.swift","/Users/i77194/Documents/BLEExtractor/Sources/BLEExtractor/BLEError.swift","/Users/i77194/Documents/BLEExtractor/Sources/BLEExtractor/BLEScanner.swift"]
+    outputs: ["/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractor.build/sources"]
+    description: "Write auxiliary file /Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractor.build/sources"
+
+  "/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractorPackageTests.build/sources":
+    tool: write-auxiliary-file
+    inputs: ["<sources-file-list>","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractorPackageTests.derived/runner.swift"]
+    outputs: ["/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractorPackageTests.build/sources"]
+    description: "Write auxiliary file /Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractorPackageTests.build/sources"
+
+  "/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractorPackageTests.derived/runner.swift":
+    tool: test-entry-point-tool
+    inputs: []
+    outputs: ["/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractorPackageTests.derived/runner.swift"]
+
+  "/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractorPackageTests.product/Objects.LinkFileList":
+    tool: write-auxiliary-file
+    inputs: ["<link-file-list>","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractor.build/BLEDevice.swift.o","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractor.build/BLEError.swift.o","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractor.build/BLEScanner.swift.o","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractorPackageTests.build/runner.swift.o","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractorTests.build/BLEScannerTests.swift.o"]
+    outputs: ["/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractorPackageTests.product/Objects.LinkFileList"]
+    description: "Write auxiliary file /Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractorPackageTests.product/Objects.LinkFileList"
+
+  "/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractorTests.build/sources":
+    tool: write-auxiliary-file
+    inputs: ["<sources-file-list>","/Users/i77194/Documents/BLEExtractor/Tests/BLEExtractorTests/BLEScannerTests.swift"]
+    outputs: ["/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractorTests.build/sources"]
+    description: "Write auxiliary file /Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractorTests.build/sources"
+
+  "/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt":
+    tool: write-auxiliary-file
+    inputs: ["<swift-get-version>","/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"]
+    outputs: ["/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"]
+    always-out-of-date: "true"
+    description: "Write auxiliary file /Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+
+  "<BLEExtractor-arm64-apple-macosx15.0-debug.module>":
+    tool: phony
+    inputs: ["/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractor.build/BLEDevice.swift.o","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractor.build/BLEError.swift.o","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractor.build/BLEScanner.swift.o","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/Modules/BLEExtractor.swiftmodule"]
+    outputs: ["<BLEExtractor-arm64-apple-macosx15.0-debug.module>"]
+
+  "<BLEExtractorPackageTests-arm64-apple-macosx15.0-debug.module>":
+    tool: phony
+    inputs: ["/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractorPackageTests.build/runner.swift.o","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/Modules/BLEExtractorPackageTests.swiftmodule"]
+    outputs: ["<BLEExtractorPackageTests-arm64-apple-macosx15.0-debug.module>"]
+
+  "<BLEExtractorPackageTests-arm64-apple-macosx15.0-debug.test>":
+    tool: phony
+    inputs: ["/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractorPackageTests.xctest/Contents/MacOS/BLEExtractorPackageTests"]
+    outputs: ["<BLEExtractorPackageTests-arm64-apple-macosx15.0-debug.test>"]
+
+  "<BLEExtractorTests-arm64-apple-macosx15.0-debug.module>":
+    tool: phony
+    inputs: ["/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractorTests.build/BLEScannerTests.swift.o","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/Modules/BLEExtractorTests.swiftmodule"]
+    outputs: ["<BLEExtractorTests-arm64-apple-macosx15.0-debug.module>"]
+
+  "C.BLEExtractor-arm64-apple-macosx15.0-debug.module":
+    tool: shell
+    inputs: ["/Users/i77194/Documents/BLEExtractor/Sources/BLEExtractor/BLEDevice.swift","/Users/i77194/Documents/BLEExtractor/Sources/BLEExtractor/BLEError.swift","/Users/i77194/Documents/BLEExtractor/Sources/BLEExtractor/BLEScanner.swift","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractor.build/sources"]
+    outputs: ["/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractor.build/BLEDevice.swift.o","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractor.build/BLEError.swift.o","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractor.build/BLEScanner.swift.o","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/Modules/BLEExtractor.swiftmodule"]
+    description: "Compiling Swift Module 'BLEExtractor' (3 sources)"
+    args: ["/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc","-module-name","BLEExtractor","-emit-dependencies","-emit-module","-emit-module-path","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/Modules/BLEExtractor.swiftmodule","-output-file-map","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractor.build/output-file-map.json","-parse-as-library","-incremental","-c","@/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractor.build/sources","-I","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/Modules","-target","arm64-apple-macosx11.0","-enable-batch-mode","-index-store-path","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/index/store","-Onone","-enable-testing","-j12","-DSWIFT_PACKAGE","-DDEBUG","-module-cache-path","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/ModuleCache","-parseable-output","-parse-as-library","-emit-objc-header","-emit-objc-header-path","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractor.build/BLEExtractor-Swift.h","-color-diagnostics","-swift-version","5","-sdk","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk","-F","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-I","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-L","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-g","-Xcc","-isysroot","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk","-Xcc","-F","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-Xcc","-fPIC","-Xcc","-g"]
+
+  "C.BLEExtractorPackageTests-arm64-apple-macosx15.0-debug.module":
+    tool: shell
+    inputs: ["/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractorPackageTests.derived/runner.swift","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/Modules/BLEExtractorTests.swiftmodule","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractorPackageTests.build/sources"]
+    outputs: ["/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractorPackageTests.build/runner.swift.o","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/Modules/BLEExtractorPackageTests.swiftmodule"]
+    description: "Compiling Swift Module 'BLEExtractorPackageTests' (1 sources)"
+    args: ["/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc","-module-name","BLEExtractorPackageTests","-emit-dependencies","-emit-module","-emit-module-path","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/Modules/BLEExtractorPackageTests.swiftmodule","-output-file-map","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractorPackageTests.build/output-file-map.json","-parse-as-library","-incremental","-c","@/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractorPackageTests.build/sources","-I","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/Modules","-target","arm64-apple-macosx11.0","-enable-batch-mode","-index-store-path","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/index/store","-Onone","-enable-testing","-j12","-DSWIFT_PACKAGE","-DDEBUG","-module-cache-path","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/ModuleCache","-parseable-output","-parse-as-library","-emit-objc-header","-emit-objc-header-path","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractorPackageTests.build/BLEExtractorPackageTests-Swift.h","-color-diagnostics","-sdk","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk","-F","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-I","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-L","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-g","-Xcc","-isysroot","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk","-Xcc","-F","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-Xcc","-fPIC","-Xcc","-g"]
+
+  "C.BLEExtractorPackageTests-arm64-apple-macosx15.0-debug.test":
+    tool: shell
+    inputs: ["/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractor.build/BLEDevice.swift.o","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractor.build/BLEError.swift.o","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractor.build/BLEScanner.swift.o","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractorPackageTests.build/runner.swift.o","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractorTests.build/BLEScannerTests.swift.o","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractorPackageTests.product/Objects.LinkFileList"]
+    outputs: ["/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractorPackageTests.xctest/Contents/MacOS/BLEExtractorPackageTests"]
+    description: "Linking ./.build/arm64-apple-macosx/debug/BLEExtractorPackageTests.xctest/Contents/MacOS/BLEExtractorPackageTests"
+    args: ["/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc","-L","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug","-o","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractorPackageTests.xctest/Contents/MacOS/BLEExtractorPackageTests","-module-name","BLEExtractorPackageTests","-Xlinker","-no_warn_duplicate_libraries","-Xlinker","-bundle","-Xlinker","-rpath","-Xlinker","@loader_path/../../../","@/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractorPackageTests.product/Objects.LinkFileList","-target","arm64-apple-macosx13.0","-Xlinker","-add_ast_path","-Xlinker","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/Modules/BLEExtractor.swiftmodule","-Xlinker","-add_ast_path","-Xlinker","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/Modules/BLEExtractorPackageTests.swiftmodule","-Xlinker","-add_ast_path","-Xlinker","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/Modules/BLEExtractorTests.swiftmodule","-sdk","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk","-F","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-I","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-L","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-g"]
+
+  "C.BLEExtractorTests-arm64-apple-macosx15.0-debug.module":
+    tool: shell
+    inputs: ["/Users/i77194/Documents/BLEExtractor/Tests/BLEExtractorTests/BLEScannerTests.swift","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/Modules/BLEExtractor.swiftmodule","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractorTests.build/sources"]
+    outputs: ["/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractorTests.build/BLEScannerTests.swift.o","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/Modules/BLEExtractorTests.swiftmodule"]
+    description: "Compiling Swift Module 'BLEExtractorTests' (1 sources)"
+    args: ["/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc","-module-name","BLEExtractorTests","-emit-dependencies","-emit-module","-emit-module-path","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/Modules/BLEExtractorTests.swiftmodule","-output-file-map","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractorTests.build/output-file-map.json","-parse-as-library","-incremental","-c","@/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractorTests.build/sources","-I","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/Modules","-target","arm64-apple-macosx13.0","-enable-batch-mode","-index-store-path","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/index/store","-Onone","-enable-testing","-j12","-DSWIFT_PACKAGE","-DDEBUG","-module-cache-path","/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/ModuleCache","-parseable-output","-parse-as-library","-color-diagnostics","-swift-version","5","-sdk","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk","-F","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-I","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-L","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-g","-Xcc","-isysroot","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk","-Xcc","-F","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-Xcc","-fPIC","-Xcc","-g"]
+
+  "PackageStructure":
+    tool: package-structure-tool
+    inputs: ["/Users/i77194/Documents/BLEExtractor/Sources/BLEExtractor/","/Users/i77194/Documents/BLEExtractor/Tests/BLEExtractorTests/","/Users/i77194/Documents/BLEExtractor/Package.swift","/Users/i77194/Documents/BLEExtractor/Package.resolved"]
+    outputs: ["<PackageStructure>"]
+    description: "Planning build"
+    allow-missing-inputs: true
+
