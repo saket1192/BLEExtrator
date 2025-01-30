@@ -159,7 +159,7 @@ extension BLEScanner: CBCentralManagerDelegate {
         logger.info("Bluetooth state updated: \(central.state.rawValue)")
     }
     
-    public func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
+    public func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, rssi RSSI: NSNumber, advertisementData: [String : Any]) {
         let device = BLEDevice(peripheral: peripheral, rssi: RSSI.intValue, advertisementData: advertisementData)
         deviceDiscoveryPublisher.send(device)
         logger.info("Discovered device: \(peripheral.name ?? "Unknown") RSSI: \(RSSI)")
