@@ -160,7 +160,7 @@ extension BLEScanner: CBCentralManagerDelegate {
     }
     
     public func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        let device = BLEDevice(peripheral: peripheral, rssi: RSSI, advertisementData: advertisementData)
+        let device = BLEDevice(peripheral: peripheral, rssi: RSSI.intValue, advertisementData: advertisementData)
         deviceDiscoveryPublisher.send(device)
         logger.info("Discovered device: \(peripheral.name ?? "Unknown") RSSI: \(RSSI)")
     }
