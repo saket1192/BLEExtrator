@@ -1,16 +1,17 @@
 # BLEExtractor
 
-A Swift framework for easy Bluetooth Low Energy (BLE) device scanning and discovery.
+A powerful Swift framework for Bluetooth Low Energy (BLE) device scanning and discovery, featuring Combine integration and SwiftUI support.
 
 ## Features
 
 - Asynchronous BLE device scanning with async/await
 - Real-time device discovery using Combine framework
-- Bluetooth state monitoring
-- Proper error handling and type-safe API
+- Bluetooth state monitoring and automatic management
+- Comprehensive error handling with custom BLEError types
 - Automatic cleanup and resource management
-- Comprehensive logging with os.log
+- Detailed logging with os.log
 - Thread-safe implementation
+- Full SwiftUI integration
 - Support for both iOS and macOS
 
 ## Requirements
@@ -26,7 +27,7 @@ A Swift framework for easy Bluetooth Low Energy (BLE) device scanning and discov
 Add the following line to your Podfile:
 
 ```ruby
-pod 'BLEExtractor', '~> 1.1.1'
+pod 'BLEExtractor', '~> 1.1.2'
 ```
 
 Then run:
@@ -59,6 +60,7 @@ class BLEViewModel: ObservableObject {
     
     @Published var discoveredDevices: [BLEDevice] = []
     @Published var bluetoothState: CBManagerState = .unknown
+    @Published var isScanning = false
     
     init() {
         setupSubscriptions()
@@ -90,11 +92,14 @@ class BLEViewModel: ObservableObject {
     }
     
     func startScanning() {
+        guard !isScanning else { return }
+        isScanning = true
         // Start scanning with 30 seconds timeout
         scanner.startScanningWithPublisher(duration: 30)
     }
     
     func stopScanning() {
+        isScanning = false
         scanner.stopScan()
     }
 }
@@ -108,22 +113,25 @@ struct BLEDeviceListView: View {
     var body: some View {
         NavigationView {
             List(viewModel.discoveredDevices) { device in
-                VStack(alignment: .leading) {
+                VStack(alignment: .leading, spacing: 4) {
                     Text(device.name ?? "Unknown Device")
                         .font(.headline)
                     Text("RSSI: \(device.rssi) dBm")
                         .font(.subheadline)
+                        .foregroundColor(.secondary)
                     Text("ID: \(device.id.uuidString)")
                         .font(.caption)
+                        .foregroundColor(.secondary)
                 }
+                .padding(.vertical, 4)
             }
             .navigationTitle("BLE Devices")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
-                        viewModel.startScanning()
+                        viewModel.isScanning ? viewModel.stopScanning() : viewModel.startScanning()
                     }) {
-                        Text("Scan")
+                        Text(viewModel.isScanning ? "Stop" : "Scan")
                     }
                 }
             }
@@ -177,8 +185,13 @@ class AdvancedBLEViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     
     @Published var discoveredDevices: [BLEDevice] = []
+    @Published var isScanning = false
     
     init() {
+        setupDeviceDiscovery()
+    }
+    
+    private func setupDeviceDiscovery() {
         // Filter and transform the device stream
         scanner.deviceDiscoveryPublisher
             .filter { device in
@@ -196,13 +209,22 @@ class AdvancedBLEViewModel: ObservableObject {
     }
     
     func startScanningWithTimeout() {
+        guard !isScanning else { return }
+        isScanning = true
         // Auto-stop after 1 minute
         scanner.startScanningWithPublisher(duration: 60)
     }
     
     func startContinuousScanning() {
+        guard !isScanning else { return }
+        isScanning = true
         // Continuous scanning until stopScan is called
         scanner.startScanningWithPublisher()
+    }
+    
+    func stopScanning() {
+        isScanning = false
+        scanner.stopScan()
     }
 }
 ```
@@ -259,10 +281,11 @@ public enum BLEError: LocalizedError {
 }
 ```
 
-## Latest Changes (v1.1.1)
+## Latest Changes (v1.1.2)
 
-- Fixed CoreBluetooth delegate method parameter order
-- Improved error handling and logging
+- Enhanced SwiftUI integration with improved UI components
+- Added isScanning state management
+- Improved error handling and state management
 - Enhanced documentation with comprehensive examples
 - Bug fixes and performance improvements
 
