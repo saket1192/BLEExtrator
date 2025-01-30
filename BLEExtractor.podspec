@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'BLEExtractor'
-  s.version          = '1.1.2'
+  s.version          = '1.1.3'
   s.summary          = 'A powerful Swift framework for Bluetooth Low Energy (BLE) device scanning with Combine support'
   
   s.description      = <<-DESC
