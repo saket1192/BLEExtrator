@@ -4,10 +4,11 @@ import os.log
 import Combine
 
 /// A class responsible for scanning Bluetooth Low Energy devices
+@available(iOS 14.0, macOS 11.0, *)
 public final class BLEScanner: NSObject {
     // MARK: - Properties
     
-    private var centralManager: CBCentralManager!
+    private let centralManager: CBCentralManager
     private let logger = Logger(subsystem: "com.bleextractor", category: "BLEScanner")
     private var scanningTask: Task<[BLEDevice], Error>?
     private var discoveredDevices: [UUID: BLEDevice] = [:]
@@ -18,29 +19,34 @@ public final class BLEScanner: NSObject {
     /// Publisher for Bluetooth state changes
     public let bluetoothStatePublisher = PassthroughSubject<CBManagerState, Never>()
     
+    private var isScanning = false
+    
     // MARK: - Public Interface
     
     public override init() {
+        self.centralManager = CBCentralManager()
         super.init()
-        centralManager = CBCentralManager(delegate: nil, queue: .main)
+        self.centralManager.delegate = self
     }
     
     /// Starts scanning for BLE devices with real-time updates
     /// - Parameter duration: Optional duration in seconds. If nil, scanning continues until stopScan is called
     /// - Throws: BLEError if scanning cannot be started
-    public func startScanningWithPublisher(duration: TimeInterval? = nil) async throws {
-        // Cancel any existing scanning task
-        scanningTask?.cancel()
-        stopScanning()
+    public func startScanningWithPublisher(duration: TimeInterval? = nil) {
+        guard !isScanning else {
+            logger.warning("Scanner is already running")
+            return
+        }
         
-        // Start scanning
-        try await startScanning()
+        isScanning = true
+        let options: [String: Any] = [CBCentralManagerScanOptionAllowDuplicatesKey: true]
         
-        // If duration is provided, stop after that time
+        centralManager.scanForPeripherals(withServices: nil, options: options)
+        logger.info("Started scanning for BLE devices")
+        
         if let duration = duration {
-            Task {
-                try await Task.sleep(nanoseconds: UInt64(duration * 1_000_000_000))
-                stopScan()
+            DispatchQueue.main.asyncAfter(deadline: .now() + duration) { [weak self] in
+                self?.stopScan()
             }
         }
     }
@@ -101,9 +107,14 @@ public final class BLEScanner: NSObject {
     
     /// Stops the current scanning operation
     public func stopScan() {
-        logger.info("Stopping BLE scan")
-        scanningTask?.cancel()
-        stopScanning()
+        guard isScanning else {
+            logger.warning("Scanner is not running")
+            return
+        }
+        
+        centralManager.stopScan()
+        isScanning = false
+        logger.info("Stopped scanning for BLE devices")
     }
     
     // MARK: - Private Methods
@@ -141,18 +152,16 @@ public final class BLEScanner: NSObject {
 
 // MARK: - CBCentralManagerDelegate
 
+@available(iOS 14.0, macOS 11.0, *)
 extension BLEScanner: CBCentralManagerDelegate {
     public func centralManagerDidUpdateState(_ central: CBCentralManager) {
-        logger.info("Bluetooth state updated: \(central.state.rawValue)")
         bluetoothStatePublisher.send(central.state)
+        logger.info("Bluetooth state updated: \(central.state.rawValue)")
     }
     
     public func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        let device = BLEDevice(peripheral: peripheral, rssi: RSSI.intValue, advertisementData: advertisementData)
-        discoveredDevices[device.id] = device
-        logger.debug("Discovered device: \(device.name ?? "Unnamed") (RSSI: \(device.rssi))")
-        
-        // Send the discovered device through the publisher
+        let device = BLEDevice(peripheral: peripheral, advertisementData: advertisementData, rssi: RSSI)
         deviceDiscoveryPublisher.send(device)
+        logger.info("Discovered device: \(peripheral.name ?? "Unknown") RSSI: \(RSSI)")
     }
 } 
