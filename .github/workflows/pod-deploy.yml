@@ -7,10 +7,33 @@ on:
     branches: [ main ]
   
 jobs:
-  lint:
-    runs-on: macos-latest
+  version:
+    runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.get_version.outputs.version }}
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Get Version from Podspec
+      id: get_version
+      shell: bash
+      run: |
+        if [ ! -f "BLEExtractor.podspec" ]; then
+          echo "Error: podspec file not found"
+          exit 1
+        fi
+        VERSION=$(cat BLEExtractor.podspec | grep -m 1 "s.version.*=" | grep -o '".*"' | sed 's/"//g')
+        if [ -z "$VERSION" ]; then
+          echo "Error: Could not extract version"
+          exit 1
+        fi
+        echo "Found version: $VERSION"
+        echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+  
+  lint:
+    needs: version
+    runs-on: macos-latest
     
     steps:
     - uses: actions/checkout@v3
@@ -18,18 +41,11 @@ jobs:
     - name: Install Cocoapods
       run: gem install cocoapods
       
-    - name: Get Version from Podspec
-      id: get_version
-      shell: bash
-      run: |
-        VERSION=$(grep -m 1 "s.version.*=" BLEExtractor.podspec | grep -o '".*"' | sed 's/"//g')
-        echo "Found version: $VERSION"
-        echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-      
     - name: Lint Podspec
       run: pod lib lint --allow-warnings
       
   test:
+    needs: version
     runs-on: macos-latest
     
     steps:
@@ -43,29 +59,22 @@ jobs:
         swift test --enable-test-discovery
           
   create-release:
-    needs: [lint, test]
+    needs: [version, lint, test]
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     
     steps:
     - uses: actions/checkout@v3
     
-    - name: Get current version
-      id: version
-      run: |
-        echo "VERSION=${{ needs.lint.outputs.version }}" >> "$GITHUB_ENV"
-        echo "Current version is ${{ needs.lint.outputs.version }}"
-    
     - name: Create Release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        VERSION: ${{ needs.lint.outputs.version }}
       with:
-        tag_name: ${{ env.VERSION }}
-        release_name: Version ${{ env.VERSION }}
+        tag_name: ${{ needs.version.outputs.version }}
+        release_name: Version ${{ needs.version.outputs.version }}
         body: |
-          Release version ${{ env.VERSION }}
+          Release version ${{ needs.version.outputs.version }}
           
           Changes in this version:
           - Enhanced SwiftUI integration
@@ -75,7 +84,7 @@ jobs:
         prerelease: false
           
   deploy:
-    needs: [create-release, lint]
+    needs: [version, create-release]
     runs-on: macos-latest
     
     steps:
@@ -87,7 +96,6 @@ jobs:
     - name: Deploy to Cocoapods
       env:
         COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
-        VERSION: ${{ needs.lint.outputs.version }}
       run: |
-        echo "Deploying version $VERSION to CocoaPods"
+        echo "Deploying version ${{ needs.version.outputs.version }} to CocoaPods"
         pod trunk push --allow-warnings 
