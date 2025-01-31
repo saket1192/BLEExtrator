@@ -1,0 +1,6 @@
+framework module BLEExtractor {
+  umbrella header "BLEExtractor-umbrella.h"
+
+  export *
+  module * { export * }
+}

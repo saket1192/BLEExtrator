@@ -1,6 +1,6 @@
 # BLEExtractor
 
-🔵 Modern Bluetooth LE Scanner with SwiftUI & Combine | iOS & macOS
+🔵 The Modern Bluetooth Low Energy Framework for iOS & macOS
 
 BLEExtractor is a powerful, SwiftUI-first framework that makes Bluetooth LE development a breeze.
 
@@ -46,7 +46,7 @@ BLEExtractor is a powerful, SwiftUI-first framework that makes Bluetooth LE deve
 Add the following line to your Podfile:
 
 ```ruby
-pod 'BLEExtractor', '~> 1.1.9'
+pod 'BLEExtractor', '~> 1.1.8'
 ```
 
 Then run:

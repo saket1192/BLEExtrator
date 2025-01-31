@@ -1,0 +1,16 @@
+PODS:
+  - BLEExtractor (1.1.8)
+
+DEPENDENCIES:
+  - BLEExtractor (~> 1.1.8)
+
+SPEC REPOS:
+  trunk:
+    - BLEExtractor
+
+SPEC CHECKSUMS:
+  BLEExtractor: f4d94f6d890566333699117900859cff08889bec
+
+PODFILE CHECKSUM: dfe70f10ca07d908c88dfdb57a6724e014f1557e
+
+COCOAPODS: 1.16.2

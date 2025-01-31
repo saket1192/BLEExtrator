@@ -24,88 +24,27 @@ public final class BLEScanner: NSObject {
     // MARK: - Public Interface
     
     public override init() {
-        let options: [String: Any] = [
-            CBCentralManagerOptionShowPowerAlertKey: true,
-            CBCentralManagerOptionRestoreIdentifierKey: "com.bleextractor.centralManager"
-        ]
-        self.centralManager = CBCentralManager(delegate: nil, queue: .main, options: options)
+        self.centralManager = CBCentralManager()
         super.init()
         self.centralManager.delegate = self
-        
-        // Send initial state
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            self.bluetoothStatePublisher.send(self.centralManager.state)
-        }
     }
     
     /// Starts scanning for BLE devices with real-time updates
     /// - Parameter duration: Optional duration in seconds. If nil, scanning continues until stopScan is called
     /// - Throws: BLEError if scanning cannot be started
     public func startScanningWithPublisher(duration: TimeInterval? = nil) {
-        logger.info("Attempting to start scanning with publisher...")
-        
         guard !isScanning else {
             logger.warning("Scanner is already running")
             return
         }
         
-        // Check Bluetooth authorization status on iOS
-        #if os(iOS)
-        let authStatus = CBCentralManager.authorization
-        switch authStatus {
-        case .notDetermined:
-            logger.error("Bluetooth authorization not determined")
-            return
-        case .restricted:
-            logger.error("Bluetooth access is restricted")
-            return
-        case .denied:
-            logger.error("Bluetooth access is denied")
-            return
-        case .allowedAlways:
-            break
-        @unknown default:
-            logger.warning("Unknown authorization status")
-            break
-        }
-        #endif
-        
-        // Check Bluetooth state
-        guard centralManager.state == .poweredOn else {
-            logger.error("Cannot start scanning: Bluetooth is not powered on. Current state: \(centralManager.state.rawValue)")
-            bluetoothStatePublisher.send(centralManager.state)
-            
-            switch centralManager.state {
-            case .poweredOff:
-                logger.error("Please turn on Bluetooth in your device settings")
-            case .unauthorized:
-                logger.error("Please authorize Bluetooth access in settings")
-            case .unsupported:
-                logger.error("This device does not support Bluetooth LE")
-            case .resetting:
-                logger.error("Bluetooth is resetting, please wait and try again")
-            case .unknown:
-                logger.error("Bluetooth state is unknown, please wait and try again")
-            default:
-                logger.error("Bluetooth is not ready. Please check your device settings")
-            }
-            return
-        }
-        
         isScanning = true
-        discoveredDevices.removeAll()
-        
-        let options: [String: Any] = [
-            CBCentralManagerScanOptionAllowDuplicatesKey: true,
-            CBCentralManagerScanOptionSolicitedServiceUUIDsKey: []
-        ]
+        let options: [String: Any] = [CBCentralManagerScanOptionAllowDuplicatesKey: true]
         
         centralManager.scanForPeripherals(withServices: nil, options: options)
         logger.info("Started scanning for BLE devices")
         
         if let duration = duration {
-            logger.info("Scan will automatically stop after \(duration) seconds")
             DispatchQueue.main.asyncAfter(deadline: .now() + duration) { [weak self] in
                 self?.stopScan()
             }
@@ -216,50 +155,13 @@ public final class BLEScanner: NSObject {
 @available(iOS 14.0, macOS 11.0, *)
 extension BLEScanner: CBCentralManagerDelegate {
     public func centralManagerDidUpdateState(_ central: CBCentralManager) {
-        let stateString = {
-            switch central.state {
-            case .unknown: return "unknown"
-            case .resetting: return "resetting"
-            case .unsupported: return "unsupported"
-            case .unauthorized: return "unauthorized"
-            case .poweredOff: return "powered off"
-            case .poweredOn: return "powered on"
-            @unknown default: return "unknown state (\(central.state.rawValue))"
-            }
-        }()
-        
-        logger.info("Bluetooth state updated to: \(stateString)")
-        
-        // Always stop scanning if state is not powered on
-        if central.state != .poweredOn && isScanning {
-            stopScan()
-        }
-        
-        // Send state update on main queue
-        DispatchQueue.main.async { [weak self] in
-            self?.bluetoothStatePublisher.send(central.state)
-        }
+        bluetoothStatePublisher.send(central.state)
+        logger.info("Bluetooth state updated: \(central.state.rawValue)")
     }
     
-    public func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String: Any], rssi RSSI: NSNumber) {
-        // Create device instance
+    public func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, rssi RSSI: NSNumber, advertisementData: [String : Any]) {
         let device = BLEDevice(peripheral: peripheral, rssi: RSSI.intValue, advertisementData: advertisementData)
-        
-        // Update device in dictionary
-        discoveredDevices[peripheral.identifier] = device
-        
-        // Log discovery
-        logger.info("""
-            Discovered device:
-            Name: \(peripheral.name ?? "Unknown")
-            ID: \(peripheral.identifier)
-            RSSI: \(RSSI)
-            Advertisement Data: \(advertisementData)
-        """)
-        
-        // Send device update on main queue
-        DispatchQueue.main.async { [weak self] in
-            self?.deviceDiscoveryPublisher.send(device)
-        }
+        deviceDiscoveryPublisher.send(device)
+        logger.info("Discovered device: \(peripheral.name ?? "Unknown") RSSI: \(RSSI)")
     }
 } 

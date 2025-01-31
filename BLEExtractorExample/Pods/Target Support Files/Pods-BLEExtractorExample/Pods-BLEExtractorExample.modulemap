@@ -1,0 +1,6 @@
+framework module Pods_BLEExtractorExample {
+  umbrella header "Pods-BLEExtractorExample-umbrella.h"
+
+  export *
+  module * { export * }
+}

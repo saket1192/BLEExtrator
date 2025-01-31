@@ -46,6 +46,8 @@
 		};
 		AB8B866A2D4B3998009E4B20 /* BLEExtractorTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = BLEExtractorTests;
 			sourceTree = "<group>";
 		};
@@ -118,8 +120,6 @@
 				AB8B865E2D4B3998009E4B20 /* BLEExtractor */,
 			);
 			name = BLEExtractor;
-			packageProductDependencies = (
-			);
 			productName = BLEExtractor;
 			productReference = AB8B865C2D4B3998009E4B20 /* BLEExtractor.framework */;
 			productType = "com.apple.product-type.framework";
@@ -141,8 +141,6 @@
 				AB8B866A2D4B3998009E4B20 /* BLEExtractorTests */,
 			);
 			name = BLEExtractorTests;
-			packageProductDependencies = (
-			);
 			productName = BLEExtractorTests;
 			productReference = AB8B86662D4B3998009E4B20 /* BLEExtractorTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
