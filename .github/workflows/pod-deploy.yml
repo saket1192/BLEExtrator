@@ -20,10 +20,11 @@ jobs:
       
     - name: Get Version from Podspec
       id: get_version
+      shell: bash
       run: |
         VERSION=$(grep -m 1 "s.version.*=" BLEExtractor.podspec | grep -o '".*"' | sed 's/"//g')
         echo "Found version: $VERSION"
-        echo "version=$VERSION" >> $GITHUB_OUTPUT
+        echo "version=$VERSION" >> "$GITHUB_OUTPUT"
       
     - name: Lint Podspec
       run: pod lib lint --allow-warnings
@@ -45,36 +46,26 @@ jobs:
     needs: [lint, test]
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    outputs:
-      release_created: ${{ steps.check_release.outputs.create_release }}
     
     steps:
     - uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
     
-    - name: Check if release exists
-      id: check_release
+    - name: Get current version
+      id: version
       run: |
-        VERSION="${{ needs.lint.outputs.version }}"
-        echo "Checking for version: $VERSION"
-        if ! git ls-remote --tags origin | grep -q "refs/tags/$VERSION$"; then
-          echo "create_release=true" >> $GITHUB_OUTPUT
-          echo "Version $VERSION does not exist, will create release"
-        else
-          echo "Version $VERSION already exists, skipping release"
-        fi
+        echo "VERSION=${{ needs.lint.outputs.version }}" >> "$GITHUB_ENV"
+        echo "Current version is ${{ needs.lint.outputs.version }}"
     
     - name: Create Release
-      if: steps.check_release.outputs.create_release == 'true'
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        VERSION: ${{ needs.lint.outputs.version }}
       with:
-        tag_name: "${{ needs.lint.outputs.version }}"
-        release_name: "Version ${{ needs.lint.outputs.version }}"
+        tag_name: ${{ env.VERSION }}
+        release_name: Version ${{ env.VERSION }}
         body: |
-          Release version ${{ needs.lint.outputs.version }}
+          Release version ${{ env.VERSION }}
           
           Changes in this version:
           - Enhanced SwiftUI integration
@@ -86,7 +77,6 @@ jobs:
   deploy:
     needs: [create-release, lint]
     runs-on: macos-latest
-    if: needs.create-release.outputs.release_created == 'true'
     
     steps:
     - uses: actions/checkout@v3
@@ -97,6 +87,7 @@ jobs:
     - name: Deploy to Cocoapods
       env:
         COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
+        VERSION: ${{ needs.lint.outputs.version }}
       run: |
-        echo "Deploying version ${{ needs.lint.outputs.version }} to CocoaPods"
+        echo "Deploying version $VERSION to CocoaPods"
         pod trunk push --allow-warnings 
