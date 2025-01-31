@@ -10,7 +10,7 @@ jobs:
   lint:
     runs-on: macos-latest
     outputs:
-      podspec_version: ${{ steps.get_version.outputs.version }}
+      version: ${{ steps.get_version.outputs.version }}
     
     steps:
     - uses: actions/checkout@v3
@@ -22,6 +22,7 @@ jobs:
       id: get_version
       run: |
         VERSION=$(grep -m 1 "s.version.*=" BLEExtractor.podspec | grep -o '".*"' | sed 's/"//g')
+        echo "Found version: $VERSION"
         echo "version=$VERSION" >> $GITHUB_OUTPUT
       
     - name: Lint Podspec
@@ -44,6 +45,8 @@ jobs:
     needs: [lint, test]
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    outputs:
+      release_created: ${{ steps.check_release.outputs.create_release }}
     
     steps:
     - uses: actions/checkout@v3
@@ -53,9 +56,13 @@ jobs:
     - name: Check if release exists
       id: check_release
       run: |
-        VERSION=${{ needs.lint.outputs.podspec_version }}
+        VERSION="${{ needs.lint.outputs.version }}"
+        echo "Checking for version: $VERSION"
         if ! git ls-remote --tags origin | grep -q "refs/tags/$VERSION$"; then
           echo "create_release=true" >> $GITHUB_OUTPUT
+          echo "Version $VERSION does not exist, will create release"
+        else
+          echo "Version $VERSION already exists, skipping release"
         fi
     
     - name: Create Release
@@ -64,10 +71,10 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ needs.lint.outputs.podspec_version }}
-        release_name: Version ${{ needs.lint.outputs.podspec_version }}
+        tag_name: "${{ needs.lint.outputs.version }}"
+        release_name: "Version ${{ needs.lint.outputs.version }}"
         body: |
-          Release version ${{ needs.lint.outputs.podspec_version }}
+          Release version ${{ needs.lint.outputs.version }}
           
           Changes in this version:
           - Enhanced SwiftUI integration
@@ -79,7 +86,7 @@ jobs:
   deploy:
     needs: [create-release, lint]
     runs-on: macos-latest
-    if: needs.create-release.result == 'success'
+    if: needs.create-release.outputs.release_created == 'true'
     
     steps:
     - uses: actions/checkout@v3
@@ -91,4 +98,5 @@ jobs:
       env:
         COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
       run: |
+        echo "Deploying version ${{ needs.lint.outputs.version }} to CocoaPods"
         pod trunk push --allow-warnings 
