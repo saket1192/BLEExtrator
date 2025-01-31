@@ -46,7 +46,7 @@ BLEExtractor is a powerful, SwiftUI-first framework that makes Bluetooth LE deve
 Add the following line to your Podfile:
 
 ```ruby
-pod 'BLEExtractor', '~> 1.1.9'
+pod 'BLEExtractor', '~> 1.1.10'
 ```
 
 Then run:
