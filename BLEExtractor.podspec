@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'BLEExtractor'
-  s.version          = '1.1.10'
+  s.version          = '1.2.0'
   s.summary          = '🔵 Modern Bluetooth LE Scanner with SwiftUI & Combine | iOS & macOS'
   s.social_media_url = 'https://twitter.com/saket1192'
   s.homepage         = 'https://github.com/saket1192/BLEExtrator'
