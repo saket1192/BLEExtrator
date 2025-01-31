@@ -1,5 +1,10 @@
 import SwiftUI
 import CoreBluetooth
+#if canImport(UIKit)
+import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 import Combine
 
 @available(iOS 14.0, macOS 11.0, *)
@@ -12,7 +17,7 @@ public struct BLEDiagnosticView: View {
         List {
             Section(header: Text("Bluetooth Status")) {
                 HStack {
-                    Text("Current State:")
+                    Text("State")
                     Spacer()
                     Text(viewModel.bluetoothStateString)
                         .foregroundColor(viewModel.stateColor)
@@ -61,9 +66,14 @@ public struct BLEDiagnosticView: View {
             }
             
             Section(header: Text("Debug Information")) {
+                #if os(iOS)
                 Text("SDK Version: \(UIDevice.current.systemVersion)")
                 Text("Device Model: \(UIDevice.current.model)")
-                if let bundleVersion = Bundle.main.object(forInfoKey: "CFBundleShortVersionString") as? String {
+                #elseif os(macOS)
+                Text("SDK Version: \(ProcessInfo.processInfo.operatingSystemVersionString)")
+                Text("Device Model: Mac")
+                #endif
+                if let bundleVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String {
                     Text("App Version: \(bundleVersion)")
                 }
             }

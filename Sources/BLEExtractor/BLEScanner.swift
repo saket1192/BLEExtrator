@@ -19,15 +19,25 @@ public final class BLEScanner: NSObject {
     /// Publisher for Bluetooth state changes
     public let bluetoothStatePublisher = PassthroughSubject<CBManagerState, Never>()
     
-    private var isScanning = false
+    /// Whether the scanner is currently scanning for devices
+    public private(set) var isScanning = false
     
     // MARK: - Public Interface
     
-    public override init() {
-        let options: [String: Any] = [
-            CBCentralManagerOptionShowPowerAlertKey: true,
-            CBCentralManagerOptionRestoreIdentifierKey: "com.bleextractor.centralManager"
-        ]
+    /// Initialize BLEScanner with optional configuration
+    /// - Parameter shouldRestoreState: Whether to restore state between app launches. Default is true.
+    /// - Parameter showPowerAlert: Whether to show power alert when Bluetooth is off. Default is true.
+    public init(shouldRestoreState: Bool = true, showPowerAlert: Bool = true) {
+        var options: [String: Any] = [:]
+        
+        if showPowerAlert {
+            options[CBCentralManagerOptionShowPowerAlertKey] = true
+        }
+        
+        if shouldRestoreState {
+            options[CBCentralManagerOptionRestoreIdentifierKey] = "com.bleextractor.centralManager"
+        }
+        
         self.centralManager = CBCentralManager(delegate: nil, queue: .main, options: options)
         super.init()
         self.centralManager.delegate = self
@@ -73,10 +83,10 @@ public final class BLEScanner: NSObject {
         
         // Check Bluetooth state
         guard centralManager.state == .poweredOn else {
-            logger.error("Cannot start scanning: Bluetooth is not powered on. Current state: \(centralManager.state.rawValue)")
-            bluetoothStatePublisher.send(centralManager.state)
+            logger.error("Cannot start scanning: Bluetooth is not powered on. Current state: \(self.centralManager.state.rawValue)")
+            bluetoothStatePublisher.send(self.centralManager.state)
             
-            switch centralManager.state {
+            switch self.centralManager.state {
             case .poweredOff:
                 logger.error("Please turn on Bluetooth in your device settings")
             case .unauthorized:
@@ -260,6 +270,27 @@ extension BLEScanner: CBCentralManagerDelegate {
         // Send device update on main queue
         DispatchQueue.main.async { [weak self] in
             self?.deviceDiscoveryPublisher.send(device)
+        }
+    }
+    
+    public func centralManager(_ central: CBCentralManager, willRestoreState dict: [String : Any]) {
+        logger.info("Restoring central manager state: \(dict)")
+        
+        // Handle restored peripherals if needed
+        if let peripherals = dict[CBCentralManagerRestoredStatePeripheralsKey] as? [CBPeripheral] {
+            for peripheral in peripherals {
+                logger.info("Restored peripheral: \(peripheral.name ?? "Unknown") (\(peripheral.identifier))")
+            }
+        }
+        
+        // Handle restored scan services if needed
+        if let services = dict[CBCentralManagerRestoredStateScanServicesKey] as? [CBUUID] {
+            logger.info("Restored scan services: \(services)")
+        }
+        
+        // Handle restored scan options if needed
+        if let scanOptions = dict[CBCentralManagerRestoredStateScanOptionsKey] as? [String: Any] {
+            logger.info("Restored scan options: \(scanOptions)")
         }
     }
 } 

@@ -304,9 +304,10 @@ typedef unsigned int swift_uint4  __attribute__((__ext_vector_type__(4)));
 #if defined(__OBJC__)
 
 /// A class responsible for scanning Bluetooth Low Energy devices
-SWIFT_CLASS("_TtC12BLEExtractor10BLEScanner")
+SWIFT_CLASS("_TtC12BLEExtractor10BLEScanner") SWIFT_AVAILABILITY(macos,introduced=11.0) SWIFT_AVAILABILITY(ios,introduced=14.0)
 @interface BLEScanner : NSObject
-- (nonnull instancetype)init OBJC_DESIGNATED_INITIALIZER;
+- (nonnull instancetype)init SWIFT_UNAVAILABLE;
++ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
 
 @class CBCentralManager;
@@ -314,9 +315,11 @@ SWIFT_CLASS("_TtC12BLEExtractor10BLEScanner")
 @class NSString;
 @class NSNumber;
 
+SWIFT_AVAILABILITY(macos,introduced=11.0) SWIFT_AVAILABILITY(ios,introduced=14.0)
 @interface BLEScanner (SWIFT_EXTENSION(BLEExtractor)) <CBCentralManagerDelegate>
 - (void)centralManagerDidUpdateState:(CBCentralManager * _Nonnull)central;
 - (void)centralManager:(CBCentralManager * _Nonnull)central didDiscoverPeripheral:(CBPeripheral * _Nonnull)peripheral advertisementData:(NSDictionary<NSString *, id> * _Nonnull)advertisementData RSSI:(NSNumber * _Nonnull)RSSI;
+- (void)centralManager:(CBCentralManager * _Nonnull)central willRestoreState:(NSDictionary<NSString *, id> * _Nonnull)dict;
 @end
 
 #endif

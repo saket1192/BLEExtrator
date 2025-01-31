@@ -8,6 +8,12 @@
     "swiftmodule": "/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractor.build/BLEDevice~partial.swiftmodule",
     "swift-dependencies": "/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractor.build/BLEDevice.swiftdeps"
   },
+  "/Users/i77194/Documents/BLEExtractor/Sources/BLEExtractor/BLEDiagnosticView.swift": {
+    "dependencies": "/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractor.build/BLEDiagnosticView.d",
+    "object": "/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractor.build/BLEDiagnosticView.swift.o",
+    "swiftmodule": "/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractor.build/BLEDiagnosticView~partial.swiftmodule",
+    "swift-dependencies": "/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractor.build/BLEDiagnosticView.swiftdeps"
+  },
   "/Users/i77194/Documents/BLEExtractor/Sources/BLEExtractor/BLEError.swift": {
     "dependencies": "/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractor.build/BLEError.d",
     "object": "/Users/i77194/Documents/BLEExtractor/.build/arm64-apple-macosx/debug/BLEExtractor.build/BLEError.swift.o",
