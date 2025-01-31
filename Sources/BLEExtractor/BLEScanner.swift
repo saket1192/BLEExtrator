@@ -83,10 +83,11 @@ public final class BLEScanner: NSObject {
         
         // Check Bluetooth state
         guard centralManager.state == .poweredOn else {
-            logger.error("Cannot start scanning: Bluetooth is not powered on. Current state: \(self.centralManager.state.rawValue)")
-            bluetoothStatePublisher.send(self.centralManager.state)
+            let state = self.centralManager.state
+            logger.error("Cannot start scanning: Bluetooth is not powered on. Current state: \(state.rawValue)")
+            bluetoothStatePublisher.send(state)
             
-            switch self.centralManager.state {
+            switch state {
             case .poweredOff:
                 logger.error("Please turn on Bluetooth in your device settings")
             case .unauthorized:

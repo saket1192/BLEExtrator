@@ -37,7 +37,7 @@ public struct BLEDiagnosticView: View {
                 } else {
                     ForEach(viewModel.discoveredDevices) { device in
                         VStack(alignment: .leading, spacing: 4) {
-                            Text(device.name ?? "Unknown Device")
+                            Text(device.displayName)
                                 .font(.headline)
                             Text("RSSI: \(device.rssi) dBm")
                                 .font(.subheadline)
@@ -67,13 +67,16 @@ public struct BLEDiagnosticView: View {
             
             Section(header: Text("Debug Information")) {
                 #if os(iOS)
-                Text("SDK Version: \(UIDevice.current.systemVersion)")
-                Text("Device Model: \(UIDevice.current.model)")
+                if #available(iOS 14.0, *) {
+                    Text("SDK Version: \(UIDevice.current.systemVersion)")
+                    Text("Device Model: \(UIDevice.current.model)")
+                }
                 #elseif os(macOS)
                 Text("SDK Version: \(ProcessInfo.processInfo.operatingSystemVersionString)")
                 Text("Device Model: Mac")
                 #endif
-                if let bundleVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String {
+                
+                if let bundleVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
                     Text("App Version: \(bundleVersion)")
                 }
             }
