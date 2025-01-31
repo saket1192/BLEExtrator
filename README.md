@@ -1,34 +1,43 @@
 # BLEExtractor
 
-Modern Bluetooth LE framework with SwiftUI, Combine, and async/await support for iOS and macOS.
+🔵 The Modern Bluetooth Low Energy Framework for iOS & macOS
 
-## Features
+BLEExtractor is a powerful, SwiftUI-first framework that makes Bluetooth LE development a breeze.
 
-✨ **Modern Swift Features**
-- Full SwiftUI integration with ready-to-use views
-- Combine publishers for reactive programming
-- Async/await support for modern concurrency
-- Protocol-oriented design with value types
+## Why BLEExtractor?
 
-🔍 **Core Features**
-- Real-time BLE device discovery and monitoring
-- Comprehensive state management
-- Built-in diagnostic tools and debugging views
-- Automatic resource cleanup
-- Thread-safe implementation
+### 🎯 Modern Swift Development
+* SwiftUI-first approach with beautiful pre-built views
+* Combine integration for reactive device updates
+* async/await API for modern concurrency
+* Protocol-oriented design for flexibility
 
-📱 **Platform Support**
-- iOS 14.0+ and macOS 11.0+
-- Native SwiftUI views and modifiers
-- Extensive documentation and examples
-- Memory-efficient implementation
+### 💪 Powerful Features
+* Real-time BLE device scanning and monitoring
+* Built-in diagnostic and debugging tools
+* Automatic state management
+* Comprehensive error handling
+* Thread-safe by design
 
-🛠 **Developer Experience**
-- Clean, type-safe API
-- Detailed logging with os.log
-- Custom error handling
-- Automatic state restoration
-- Example projects and guides
+### 🛡 Enterprise-Ready
+* Production-tested reliability
+* Memory-efficient implementation
+* Automatic resource cleanup
+* Detailed logging system
+* Extensive documentation
+
+### 🎨 Developer Experience
+* Beautiful SwiftUI diagnostic views
+* Clean, intuitive API design
+* Type-safe operations
+* Extensive code examples
+* Comprehensive guides
+
+### 📱 Platform Support
+* iOS 14.0+
+* macOS 11.0+
+* Swift 5.0+
+* SwiftUI & UIKit compatible
 
 ## Installation
 
@@ -37,7 +46,7 @@ Modern Bluetooth LE framework with SwiftUI, Combine, and async/await support for
 Add the following line to your Podfile:
 
 ```ruby
-pod 'BLEExtractor', '~> 1.1.7'
+pod 'BLEExtractor', '~> 1.1.8'
 ```
 
 Then run:

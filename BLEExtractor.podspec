@@ -1,51 +1,66 @@
 Pod::Spec.new do |s|
   s.name             = 'BLEExtractor'
-  s.version          = '1.1.7'
-  s.summary          = 'Modern Bluetooth LE framework with SwiftUI, Combine, and async/await support for iOS and macOS'
+  s.version          = '1.1.8'
+  s.summary          = '🔵 Modern Bluetooth LE Scanner with SwiftUI & Combine | iOS & macOS'
+  s.social_media_url = 'https://twitter.com/saket1192'
   
   s.description      = <<-DESC
-BLEExtractor: Modern Bluetooth Low Energy Framework
+# BLEExtractor
 
-A powerful, protocol-oriented Swift framework for BLE device scanning and management, featuring:
+🔵 The Modern Bluetooth Low Energy Framework for iOS & macOS
 
-✨ Modern Swift Features:
-• Full SwiftUI integration with ready-to-use views
-• Combine publishers for reactive programming
-• Async/await support for modern concurrency
-• Protocol-oriented design with value types
+BLEExtractor is a powerful, SwiftUI-first framework that makes Bluetooth LE development a breeze.
 
-🔍 Core Features:
-• Real-time BLE device discovery and monitoring
-• Comprehensive state management
-• Built-in diagnostic tools and debugging views
-• Automatic resource cleanup
-• Thread-safe implementation
+## Why BLEExtractor?
 
-📱 Platform Support:
-• iOS 14.0+ and macOS 11.0+
-• Native SwiftUI views and modifiers
-• Extensive documentation and examples
-• Memory-efficient implementation
+### 🎯 Modern Swift Development
+* SwiftUI-first approach with beautiful pre-built views
+* Combine integration for reactive device updates
+* async/await API for modern concurrency
+* Protocol-oriented design for flexibility
 
-🛠 Developer Experience:
-• Clean, type-safe API
-• Detailed logging with os.log
-• Custom error handling
-• Automatic state restoration
-• Example projects and guides
+### 💪 Powerful Features
+* Real-time BLE device scanning and monitoring
+* Built-in diagnostic and debugging tools
+* Automatic state management
+* Comprehensive error handling
+* Thread-safe by design
+
+### 🛡 Enterprise-Ready
+* Production-tested reliability
+* Memory-efficient implementation
+* Automatic resource cleanup
+* Detailed logging system
+* Extensive documentation
+
+### 🎨 Developer Experience
+* Beautiful SwiftUI diagnostic views
+* Clean, intuitive API design
+* Type-safe operations
+* Extensive code examples
+* Comprehensive guides
+
+### 📱 Platform Support
+* iOS 14.0+
+* macOS 11.0+
+* Swift 5.0+
+* SwiftUI & UIKit compatible
+
+Perfect for both beginners and advanced developers building Bluetooth LE applications.
                        DESC
 
   s.homepage         = 'https://github.com/saket1192/BLEExtrator'
+  s.screenshots      = 'https://raw.githubusercontent.com/saket1192/BLEExtrator/main/Resources/screenshot1.png'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'saket kumar' => 'saket1192@gmail.com' }
   s.source           = { :git => 'https://github.com/saket1192/BLEExtrator.git', :tag => s.version.to_s }
 
-  s.platform = :ios, :osx
   s.ios.deployment_target = '14.0'
   s.osx.deployment_target = '11.0'
   s.swift_version = '5.0'
 
   s.source_files = 'Sources/**/*'
-  
   s.frameworks = 'CoreBluetooth', 'Combine'
+  
+  s.documentation_url = 'https://github.com/saket1192/BLEExtrator/blob/main/README.md'
 end 
