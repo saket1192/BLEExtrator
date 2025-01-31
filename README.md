@@ -27,7 +27,7 @@ A powerful Swift framework for Bluetooth Low Energy (BLE) device scanning and di
 Add the following line to your Podfile:
 
 ```ruby
-pod 'BLEExtractor', '~> 1.1.2'
+pod 'BLEExtractor', '~> 1.1.4'
 ```
 
 Then run:
