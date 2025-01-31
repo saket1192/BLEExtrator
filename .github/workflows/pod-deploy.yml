@@ -5,18 +5,24 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-  release:
-    types: [created]
   
 jobs:
   lint:
     runs-on: macos-latest
+    outputs:
+      podspec_version: ${{ steps.get_version.outputs.version }}
     
     steps:
     - uses: actions/checkout@v3
     
     - name: Install Cocoapods
       run: gem install cocoapods
+      
+    - name: Get Version from Podspec
+      id: get_version
+      run: |
+        VERSION=$(grep -m 1 "s.version.*=" BLEExtractor.podspec | grep -o '".*"' | sed 's/"//g')
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
       
     - name: Lint Podspec
       run: pod lib lint --allow-warnings
@@ -34,10 +40,46 @@ jobs:
       run: |
         swift test --enable-test-discovery
           
-  deploy:
+  create-release:
     needs: [lint, test]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    
+    - name: Check if release exists
+      id: check_release
+      run: |
+        VERSION=${{ needs.lint.outputs.podspec_version }}
+        if ! git ls-remote --tags origin | grep -q "refs/tags/$VERSION$"; then
+          echo "create_release=true" >> $GITHUB_OUTPUT
+        fi
+    
+    - name: Create Release
+      if: steps.check_release.outputs.create_release == 'true'
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ needs.lint.outputs.podspec_version }}
+        release_name: Version ${{ needs.lint.outputs.podspec_version }}
+        body: |
+          Release version ${{ needs.lint.outputs.podspec_version }}
+          
+          Changes in this version:
+          - Enhanced SwiftUI integration
+          - Improved Bluetooth state handling
+          - Bug fixes and performance improvements
+        draft: false
+        prerelease: false
+          
+  deploy:
+    needs: [create-release, lint]
     runs-on: macos-latest
-    if: github.event_name == 'release' && github.event.action == 'created'
+    if: needs.create-release.result == 'success'
     
     steps:
     - uses: actions/checkout@v3
