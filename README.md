@@ -1,27 +1,34 @@
 # BLEExtractor
 
-A powerful Swift framework for Bluetooth Low Energy (BLE) device scanning and discovery, featuring Combine integration and SwiftUI support.
+Modern Bluetooth LE framework with SwiftUI, Combine, and async/await support for iOS and macOS.
 
 ## Features
 
-- Asynchronous BLE device scanning with async/await
-- Real-time device discovery using Combine framework
-- Full SwiftUI integration with diagnostic views
-- Bluetooth state monitoring and automatic management
-- Comprehensive error handling with custom BLEError types
-- Built-in diagnostic tools for debugging BLE issues
-- Automatic cleanup and resource management
-- Memory-efficient implementation
-- Detailed logging with os.log
+✨ **Modern Swift Features**
+- Full SwiftUI integration with ready-to-use views
+- Combine publishers for reactive programming
+- Async/await support for modern concurrency
+- Protocol-oriented design with value types
+
+🔍 **Core Features**
+- Real-time BLE device discovery and monitoring
+- Comprehensive state management
+- Built-in diagnostic tools and debugging views
+- Automatic resource cleanup
 - Thread-safe implementation
-- Support for both iOS and macOS
+
+📱 **Platform Support**
+- iOS 14.0+ and macOS 11.0+
+- Native SwiftUI views and modifiers
 - Extensive documentation and examples
+- Memory-efficient implementation
 
-## Requirements
-
-- iOS 14.0+ / macOS 11.0+
-- Swift 5.0+
-- Xcode 13.0+
+🛠 **Developer Experience**
+- Clean, type-safe API
+- Detailed logging with os.log
+- Custom error handling
+- Automatic state restoration
+- Example projects and guides
 
 ## Installation
 
@@ -30,7 +37,7 @@ A powerful Swift framework for Bluetooth Low Energy (BLE) device scanning and di
 Add the following line to your Podfile:
 
 ```ruby
-pod 'BLEExtractor', '~> 1.1.6'
+pod 'BLEExtractor', '~> 1.1.7'
 ```
 
 Then run:
